@@ -1,0 +1,82 @@
+{% extends 'main/layout.html' %}
+{% load static %}
+{% block title %} Управление заказами {% endblock %}
+
+
+{% block body %}
+    <link rel="stylesheet" href="{% static 'main/css/admin.css' %}">
+<div class="admin-container">
+    <input type="text" id="searchInput" class="search-input" placeholder="Поиск по заказам..." onkeyup="filterTable()">
+
+    <table class="orders-table" id="ordersTable">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Пользователь</th>
+            <th>Номер телефона</th>
+            <th>Оборудование</th>
+            <th>Дата выполнения</th>
+            <th>Время</th>
+            <th>Часы аренды</th>
+            <th>Водитель</th>
+            <th>Статус</th>
+            <th>Действие</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for order in orders %}
+        <tr>
+            <td>{{ order.id }}</td>
+            <td>{{ order.customer_name }}</td>
+            <td>{{ order.customer_phone }}</td>
+            <td>{{ order.equipment.name }} {{ order.free_equipment.name }}</td>
+            <td>{{ order.order_date }}</td>
+            <td>{{ order.order_time }}</td>
+            <td>{{ order.hours }} ч.</td>
+            <td>{{ order.free_equipment.driver.first_name }} {{ order.free_equipment.driver.phone_number }}</td>
+            <td class="status-{{ order.status|lower }}">{{ order.status }}</td>
+            <td>
+                <div class="button-container">
+                    {% if order.status == "Ожидает подтверждения" %}
+                    <a href="{% url 'administrator:update_order_status' order.id 'confirm' %}" class="confirm-button">Подтвердить</a>
+                    <a href="{% url 'administrator:update_order_status' order.id 'reject' %}" class="reject-button">Отклонить</a>
+                    {% else %}
+                    <span>-</span>
+                    {% endif %}
+                </div>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="10" class="no-orders">Заказов нет</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<script>
+    function filterTable() {
+        const input = document.getElementById("searchInput");
+        const filter = input.value.toLowerCase();
+        const table = document.getElementById("ordersTable");
+        const rows = table.getElementsByTagName("tr");
+
+        for (let i = 1; i < rows.length; i++) {
+            const cells = rows[i].getElementsByTagName("td");
+            let match = false;
+
+            for (let j = 0; j < cells.length; j++) {
+                if (cells[j]) {
+                    const cellText = cells[j].textContent || cells[j].innerText;
+                    if (cellText.toLowerCase().indexOf(filter) > -1) {
+                        match = true;
+                    }
+                }
+            }
+
+            rows[i].style.display = match ? "" : "none";
+        }
+    }
+</script>
+{% endblock %}

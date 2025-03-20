@@ -1,0 +1,93 @@
+{% extends 'main/layout.html' %}
+{% load static %}
+
+{% block title %}
+Оплата заказа
+{% endblock %}
+
+{% block body %}
+<section class="order-flow-section">
+    <div class="order-flow-container">
+        <div class="payment-card">
+            <div class="order-flow-header">
+                <h1>Оплата заказа №{{ order.id }}</h1>
+                <p>Подтверждение и оплата вашего заказа</p>
+            </div>
+
+            <div class="payment-info">
+                <p>
+                    <span>Оборудование:</span>
+                    <strong>{{ order.equipment.name }}</strong>
+                </p>
+                <p>
+                    <span>Общая стоимость:</span>
+                    <strong>{{ order.total_cost }} ₽</strong>
+                </p>
+            </div>
+
+            <form method="POST" class="payment-form">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="card_number">
+                        <i class="fas fa-credit-card"></i>
+                        Номер карты
+                    </label>
+                    <input type="text" id="card_number" name="card_number" required
+                           placeholder="0000 0000 0000 0000" maxlength="19">
+                </div>
+
+                <div class="form-group">
+                    <label for="expiry_date">
+                        <i class="fas fa-calendar"></i>
+                        Срок действия
+                    </label>
+                    <input type="text" id="expiry_date" name="expiry_date" required
+                           placeholder="MM/YY" maxlength="5">
+                </div>
+
+                <div class="form-group">
+                    <label for="cvv">
+                        <i class="fas fa-lock"></i>
+                        CVV
+                    </label>
+                    <input type="text" id="cvv" name="cvv" required
+                           placeholder="123" maxlength="4">
+                </div>
+
+                <button type="submit" class="pay-now-button">
+                    <i class="fas fa-check"></i>
+                    Оплатить
+                </button>
+            </form>
+        </div>
+    </div>
+</section>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Форматирование номера карты
+        const cardNumber = document.getElementById('card_number');
+        cardNumber.addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            value = value.replace(/(\d{4})/g, '$1 ').trim();
+            e.target.value = value;
+        });
+
+        // Форматирование срока действия
+        const expiryDate = document.getElementById('expiry_date');
+        expiryDate.addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length >= 2) {
+                value = value.slice(0, 2) + '/' + value.slice(2);
+            }
+            e.target.value = value;
+        });
+
+        // Только цифры для CVV
+        const cvv = document.getElementById('cvv');
+        cvv.addEventListener('input', function(e) {
+            e.target.value = e.target.value.replace(/\D/g, '');
+        });
+    });
+</script>
+{% endblock %}

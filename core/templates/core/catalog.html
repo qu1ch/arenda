@@ -1,0 +1,76 @@
+{% extends 'main/layout.html' %}
+{% load static %}
+
+{% block body %}
+<section class="catalog-section">
+    <div class="catalog-container">
+        <!-- Боковое меню категорий -->
+        <div class="catalog-sidebar">
+            <h3>Категории</h3>
+            <div class="category-menu">
+                <button class="category-btn active" data-filter="all">
+                    <i class="fas fa-th-large"></i>
+                    Все категории
+                </button>
+                {% for category in categories %}
+                <button class="category-btn" data-filter="{{ category.id }}">
+                    <i class="fas fa-truck"></i>
+                    {{ category.name }}
+                </button>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Основной контент -->
+        <div class="catalog-content">
+            <h2>Каталог техники</h2>
+            <div class="catalog-grid">
+                {% for category in categories %}
+                    {% for item in category.equipment.all %}
+                    <div class="catalog-item" data-category="{{ category.id }}">
+                        <img src="{{ item.image.url }}" alt="{{ item.name }}">
+                        <div class="catalog-item-content">
+                            <h3>{{ item.name }}</h3>
+                            <p class="price">От {{ item.price_per_hour }} ₽/час</p>
+                            <div class="catalog-item-features">
+                                <span><i class="fas fa-truck"></i> {{ item.category.name }}</span>
+                                <span><i class="fas fa-check-circle"></i> В наличии</span>
+                            </div>
+                            <a href="{% url 'core:equipment_order' equipment_id=item.id %}" class="rent-btn">
+                                Заказать
+                            </a>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const categoryButtons = document.querySelectorAll('.category-btn');
+    const catalogItems = document.querySelectorAll('.catalog-item');
+
+    categoryButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            // Remove active class from all buttons
+            categoryButtons.forEach(btn => btn.classList.remove('active'));
+            // Add active class to clicked button
+            button.classList.add('active');
+
+            const filterValue = button.getAttribute('data-filter');
+
+            catalogItems.forEach(item => {
+                if (filterValue === 'all' || item.getAttribute('data-category') === filterValue) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        });
+    });
+});
+</script>
+{% endblock %}

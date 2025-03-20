@@ -1,0 +1,107 @@
+{% extends 'main/layout.html' %}
+{% load static %}
+
+{% block title %}
+Управление заявками
+{% endblock %}
+
+
+
+{% block body %}
+    <link rel="stylesheet" href="{% static 'main/css/admin.css' %}">
+<div class="admin-container">
+    <input type="text" id="searchInput" class="search-input" placeholder="Поиск по заявкам..." onkeyup="filterTable()">
+
+    {% if rental_requests %}
+        <table class="orders-table" id="requestsTable">
+            <thead>
+                <tr>
+                    <th>Название техники</th>
+                    <th>Гос номер</th>
+                    <th>Водитель</th>
+                    <th>Номер телефона</th>
+                    <th>Номер СТС</th>
+                    <th>Вод. удостоверение</th>
+                    <th>Номер паспорта</th>
+                    <th>Статус</th>
+                    <th>Действие</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for request in rental_requests %}
+                <tr id="request-{{ request.id }}">
+                    <td>{{ request.name }}</td>
+                    <td>{{ request.number }}</td>
+                    <td>{{ request.driver }}</td>
+                    <td>{{ request.driver.phone_number }}</td>
+                    <td>{{ request.sts_number }}</td>
+                    <td>{{ request.driver_license }}</td>
+                    <td>{{ request.passport_number }}</td>
+                    <td class="status-{{ request.status|lower }}" id="status-{{ request.id }}">{{ request.status }}</td>
+                    <td>
+                        <div class="button-container">
+                            {% if request.status == "На рассмотрении" %}
+                                <button class="confirm-button approve-btn" data-id="{{ request.id }}" data-status="Одобрено">Одобрить</button>
+                                <button class="reject-button reject-btn" data-id="{{ request.id }}" data-status="Отклонено">Отклонить</button>
+                            {% else %}
+                                <span>{{ request.status }}</span>
+                            {% endif %}
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p class="no-orders">Нет новых заявок.</p>
+    {% endif %}
+</div>
+
+<script>
+document.querySelectorAll('.approve-btn, .reject-btn').forEach(button => {
+    button.addEventListener('click', function() {
+        let requestId = this.getAttribute('data-id');
+        let newStatus = this.getAttribute('data-status');
+
+        fetch("{% url 'administrator:approve_rental_request' %}", {
+            method: "POST",
+            headers: {
+                "X-CSRFToken": "{{ csrf_token }}",
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ request_id: requestId, status: newStatus })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                document.getElementById("status-" + requestId).textContent = newStatus;
+                document.querySelector(`[data-id='${requestId}']`).parentElement.innerHTML = newStatus;
+            }
+        });
+    });
+});
+
+function filterTable() {
+    const input = document.getElementById("searchInput");
+    const filter = input.value.toLowerCase();
+    const table = document.getElementById("requestsTable");
+    const rows = table.getElementsByTagName("tr");
+
+    for (let i = 1; i < rows.length; i++) {
+        const cells = rows[i].getElementsByTagName("td");
+        let match = false;
+
+        for (let j = 0; j < cells.length; j++) {
+            if (cells[j]) {
+                const cellText = cells[j].textContent || cells[j].innerText;
+                if (cellText.toLowerCase().indexOf(filter) > -1) {
+                    match = true;
+                }
+            }
+        }
+
+        rows[i].style.display = match ? "" : "none";
+    }
+}
+</script>
+{% endblock %}
