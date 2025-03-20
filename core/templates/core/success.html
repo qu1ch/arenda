@@ -1,0 +1,22 @@
+{% extends 'main/layout.html' %}
+{% load static %}
+
+{% block title %}
+Спасибо за ваш заказ!
+{% endblock %}
+
+{% block body %}
+<section class="order-flow-section">
+    <div class="order-flow-container">
+        <div class="success-card">
+            <i class="fas fa-check-circle success-icon"></i>
+            <h1 class="success-message">Спасибо за ваш заказ!</h1>
+            <p class="success-message">Ваш заказ на технику был успешно оформлен. Мы скоро свяжемся с вами.</p>
+            <p class="success-note">
+                <i class="fas fa-clock"></i>
+                Не забудьте оплатить заказ в течение 30 минут после подтверждения, иначе он будет отменен.
+            </p>
+        </div>
+    </div>
+</section>
+{% endblock %}
