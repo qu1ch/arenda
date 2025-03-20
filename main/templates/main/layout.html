@@ -1,0 +1,122 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BuildLease - Аренда строительной техники</title>
+    <link rel="stylesheet" href="{% static 'main/css/styles.css' %}">
+<!--     <link rel="stylesheet" href="{% static 'main/css/style.css' %}">-->
+    <link rel="stylesheet" href="{% static 'main/css/auth.css' %}">
+    <link rel="stylesheet" href="{% static 'main/css/catalog.css' %}">
+    <link rel="stylesheet" href="{% static 'main/css/account.css' %}">
+    <link rel="stylesheet" href="{% static 'main/css/order_flow.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+<header>
+    <nav class="navbar">
+        <div class="logo">
+            <img src="{% static 'main/img/png/logo2.png' %}" alt="BuildTech Logo" class="logo-img">
+            <a href="{% url 'main:index' %}" class="logo-link"><h1>BuildLease</h1></a>
+        </div>
+        
+        <!-- Добавляем кнопку бургер-меню -->
+        <button class="mobile-menu-toggle">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+
+        <!-- Оборачиваем существующие nav-links -->
+        <div class="nav-links" id="navLinks">
+            {% if not user.is_authenticated or user.role != "landlord" %}
+            <a href="{% url 'core:catalog' %}">Каталог</a>
+            {% endif %}
+            <a href="{% url 'main:about' %}">О нас</a>
+            {% if user.is_authenticated %}
+            {% if user.is_staff %}
+            <a href="{% url 'administrator:admin_orders' %}">Все заказы</a>
+            <a href="{% url 'administrator:equipment_list' %}">Техника</a>
+            <a href="{% url 'administrator:admin_rental_requests' %}">Заявки на сдачу</a>
+            {% elif user.role == "landlord" %}
+            <a href="{% url 'account:orders' %}">Мои заявки</a>
+            <a href="{% url 'account:equipment_list' %}">Моя техника</a>
+            <a href="{% url 'account:account' %}">Профиль</a>
+            {% else %}
+            <a href="{% url 'account:user_orders' %}">Заказы</a>
+            <a href="{% url 'account:account' %}">Профиль</a>
+            {% endif %}
+            <form action="{% url 'authorization:logout' %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class="login-btn">Выйти</button>
+            </form>
+            {% else %}
+            <div class="auth-buttons">
+                <a href="{% url 'authorization:login' %}" class="login-btn">Вход</a>
+                <a href="{% url 'authorization:register' %}" class="register-btn">Регистрация</a>
+            </div>
+            {% endif %}
+        </div>
+    </nav>
+</header>
+
+{% block body %}
+
+{% endblock %}
+<footer>
+    <div class="footer-content">
+        <div class="footer-section">
+            <h3>BuildLease</h3>
+            <p>Профессиональная аренда строительной техники</p>
+            <div class="footer-contact">
+                <p><i class="fas fa-phone"></i> +7 (999) 123-45-67</p>
+                <p><i class="fas fa-envelope"></i> info@BuildLease.ru</p>
+            </div>
+        </div>
+        <div class="footer-section">
+            <h3>Навигация</h3>
+            <a href="{% url 'main:index' %}">Главная</a>
+            <a href="{% url 'core:catalog' %}">Каталог</a>
+            <a href="{% url 'main:about' %}">О нас</a>
+        </div>
+        <div class="footer-section">
+            <h3>Социальные сети</h3>
+            <div class="social-links">
+                <a href="#" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" title="Instagram"><i class="fab fa-instagram"></i></a>
+                <a href="#" title="Telegram"><i class="fab fa-telegram-plane"></i></a>
+                <a href="#" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+            </div>
+        </div>
+    </div>
+    <div class="footer-bottom">
+            <p>&copy; 2024 BuildLease. Все права защищены.</p>
+    </div>
+</footer>
+
+<script src="{% static 'main/js/script.js' %}"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
+    const navLinks = document.querySelector('.nav-links');
+
+    mobileMenuToggle.addEventListener('click', function() {
+        this.classList.toggle('active');
+        navLinks.classList.toggle('active');
+    });
+
+    // Закрываем меню при клике вне его
+    document.addEventListener('click', function(e) {
+        if (!navLinks.contains(e.target) && !mobileMenuToggle.contains(e.target)) {
+            navLinks.classList.remove('active');
+            mobileMenuToggle.classList.remove('active');
+        }
+    });
+});
+</script>
+</body>
+</html>
+
+

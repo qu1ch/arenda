@@ -1,0 +1,95 @@
+{% extends 'main/layout.html' %}
+{% load static %}
+{% block title %}
+Главная
+{% endblock %}
+
+{% block body %}
+<main>
+        <section id="hero" class="hero-section">
+            <div class="hero-content">
+                <h1>Аренда строительной техники</h1>
+                <p>Профессиональная техника для ваших строительных проектов</p>
+                <div class="hero-buttons">
+                    <a href="{% url 'core:catalog' %}" class="cta-button button">Перейти в каталог</a>
+                </div>
+            </div>
+        </section>
+
+        <section class="steps-section">
+            <div class="container">
+                <h2 class="section-title">Как это работает</h2>
+                <div class="steps-grid">
+                    <div class="step-card">
+                        <div class="step-icon">
+                            <i class="fas fa-user-plus"></i>
+                        </div>
+                        <h3>Регистрируйтесь</h3>
+                        <p>Зарегистрируйтесь на сайте или в мобильном приложении, заполнив простую форму.</p>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-icon">
+                            <i class="fas fa-clipboard-list"></i>
+                        </div>
+                        <h3>Оформляйте заявку</h3>
+                        <p>Выберите нужную технику из каталога, укажите сроки аренды и место доставки.</p>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-icon">
+                            <i class="fas fa-phone-alt"></i>
+                        </div>
+                        <h3>Ожидайте подтверждения</h3>
+                        <p>Наш менеджер свяжется с вами для уточнения деталей и подтвердит заявку.</p>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-icon">
+                            <i class="fas fa-credit-card"></i>
+                        </div>
+                        <h3>Оплачивайте</h3>
+                        <p>Произведите оплату удобным для вас способом: онлайн или через банк.</p>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-icon">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <h3>Отслеживайте</h3>
+                        <p>Используйте нашу систему для мониторинга доставки техники, ее местоположения и состояния.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="advantages-section">
+            <div class="advantages-container">
+                <div class="advantages-content">
+                    <h2>Почему выбирают нас</h2>
+                    <div class="advantages-grid">
+                        <div class="advantage-item">
+                            <i class="fas fa-clock"></i>
+                            <h3>24/7 Поддержка</h3>
+                            <p>Круглосуточная техническая поддержка и консультации</p>
+                        </div>
+                        <div class="advantage-item">
+                            <i class="fas fa-truck"></i>
+                            <h3>Быстрая доставка</h3>
+                            <p>Доставка техники в день обращения</p>
+                        </div>
+                        <div class="advantage-item">
+                            <i class="fas fa-tools"></i>
+                            <h3>Техническое обслуживание</h3>
+                            <p>Регулярное ТО и ремонт техники</p>
+                        </div>
+                        <div class="advantage-item">
+                            <i class="fas fa-shield-alt"></i>
+                            <h3>Гарантия качества</h3>
+                            <p>Вся техника проходит регулярную проверку</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="advantages-image">
+                    <img src="{% static 'main/img/png/1.png'%}" alt="Строительная техника">
+                </div>
+            </div>
+        </section>
+    </main>
+{% endblock %}
