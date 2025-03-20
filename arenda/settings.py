@@ -143,6 +143,6 @@ LOGIN_REDIRECT_URL = '/account'
 LOGOUT_REDIRECT_URL = 'main:index'
 LOGIN_URL = '/account'
 
-# ALLOWED_HOSTS = ['176.109.106.153','buildlease.online', 'www.buildlease.online']
+ALLOWED_HOSTS = ['82.202.138.219','buildlease.online', 'www.buildlease.online']
 
 
